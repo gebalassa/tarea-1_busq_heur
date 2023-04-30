@@ -65,7 +65,7 @@ namespace AllQueensChess {
 			//Chequeos
 			// 1) Validez de pieza
 			if (!is_piece_valid(piece, team_board)) { cout << "ERROR: Pieza inválida\n";  return false; }
-			else if (!is_position_empty(new_pos)) { cout << "ERROR: Casilla ya está ocupada\n"; return false }
+			else if (!is_position_empty(new_pos)) { cout << "ERROR: Casilla ya está ocupada\n"; return false; }
 
 			// 2) Mover pieza
 			board = board & ~piece;

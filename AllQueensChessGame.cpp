@@ -50,6 +50,23 @@ namespace AllQueensChess {
 				exit = true;
 			}
 		}
+
+		void input_move(){
+			
+			bool valid_piece = false;
+			bool valid_move = false;
+			while (!valid_move && !exit){
+				// Elección de pieza
+				while (!valid_piece && !exit){
+					char raw[4] = "EEE";
+					cout << "Ingrese pieza (fil-col): ";
+					// Parsing
+					cin >> raw;
+					cout << raw;
+					exit = true;
+				}
+			}
+		}
 	};
 }
 
