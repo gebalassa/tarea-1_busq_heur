@@ -2,6 +2,7 @@
 #define ALLQUEENSCHESSGAME
 #include <iostream>
 #include <map>
+#include <bitset>
 #include <time.h>
 #include <iomanip>
 #include <limits>
@@ -35,109 +36,169 @@ namespace AllQueensChess {
 		void initialize() {
 			// GAME LOOP
 			srand((unsigned int) time(NULL));
-			while (!victory && !exit) {
-				// INTRO
-				cout << "Bienvenido a AllQueensChess" << "\n\n";
-				board.print_board(board.board);
+			// INTRO
+			cout << "Bienvenido a AllQueensChess" << "\n\n";
+			board.print_board();
+			int initial_turn = (int) rand() % 2; //0 o 1
+			turn = initial_turn;
+			cout << "Turno inicial: " << number_to_team[turn] << "\n";
 
-				int initial_turn = (int) rand() % 2; //0 o 1
-				turn = initial_turn;
-				cout << "Turno inicial: " << number_to_team[turn] << "\n";
+			while (!victory && !exit) {
 
 				// Input movimiento
 				input_move();
 
-
-				exit = true;
+				// Imprimir nuevo tablero
+				board.print_board();
 			}
 		}
 
 		// Realizar ciclo de un input de movimiento
 		void input_move(){
 			
-			bool valid_piece = false;
+			bool parsed_piece = false;
+			bool parsed_move = false;
 			bool valid_move = false;
 			int piece_fil;
 			int piece_col;
-			while (!valid_move && !exit){
-				// Elección de pieza
-				while (!valid_piece && !exit){
-					char raw[4] = "EEE";
-					piece_fil = -1;
-					piece_col = -1;
-					int parsed = -1;
-					// Instrucción
-					cout << "Ingrese pieza (fil-col): ";
+			int obj_fil;
+			int obj_col;
+			while (!valid_move && !exit) {
+				while (!parsed_move && !exit) {
+					// I) Parseo de input de pieza
+					while (!parsed_piece && !exit) {
+						char raw[4] = "EEE";
+						int parsed = -1;
+						piece_fil = -1;
+						piece_col = -1;
+						obj_fil = -1;
+						obj_col = -1;
+						// Instrucción
+						cout << "Ingrese pieza (fil-col): ";
 
-					// PARSING
-					// **POR TEMAS DE TIEMPO SUPONDREMOS ALGUN GRADO DE RESTRICCION DEL USUARIO Y SUS INPUTS**
-					// Limita input a 3 chars+terminador. Ignora el resto hasta newline.
+						// PARSING
+						// **POR TEMAS DE TIEMPO SUPONDREMOS ALGUN GRADO DE RESTRICCION DEL USUARIO Y SUS INPUTS**
+						// Limita input a 3 chars+terminador. Ignora el resto hasta newline.
+						cin >> std::setw(4) >> raw; cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						// DEBUG: Imprime esto si falla en parsear a chars
+						if (cin.fail()){
+							cout << "FAILED in PIECE" << endl;
+						}
+						// Chequeo símbolos correctos
+						// Chequeo salida
+						if (raw[0] == 'q'){ exit = true; break; }
+						// Chequeo caracter fila
+						parsed = raw[0] - '0'; // Char numérico->Valor int real
+						switch(parsed){
+							case 0:
+								piece_fil = 0; break;
+							case 1:
+								piece_fil = 1; break;
+							case 2:
+								piece_fil = 2; break;
+							case 3:
+								piece_fil = 3; break;
+							case 4:
+								piece_fil = 4; break;
+							default:
+								cout << "Fila invalida" << endl; break;
+						}
+						if (piece_fil == -1) { continue; }					
+						// Chequeo caracter guión central "-"
+						if (raw[1] != '-') { cout << "Separador fil-col invalido." << endl; continue; }					
+						// Chequeo caracter columna
+						parsed = raw[2] - '0'; // Char numérico->Valor int real
+						switch(parsed){
+							case 0:
+								piece_col = 0; break;
+							case 1:
+								piece_col = 1; break;
+							case 2:
+								piece_col = 2; break;
+							case 3:
+								piece_col = 3; break;
+							case 4:
+								piece_col = 4; break;
+							default:
+								cout << "Columna invalida" << endl; break;
+						}
+						if (piece_col == -1) { continue; }					
+						//----DEBUG-------
+						// cout << "Fila: " << piece_fil << " Columna: "<< piece_col << endl;
+						// cin.get();
+						//----------------
+						parsed_piece = true;
+					}
+
+					// II) Parseo de input de posición objetivo (SIMILAR al de pieza!)
+					char raw[4] = "EEE";
+					int parsed = -1;
+					obj_fil = -1;
+					obj_col = -1;
+					// Instrucción
+					cout << "Ingrese posicion objetivo (fil-col): ";
+					// PARSING (similar al de pieza, arriba)
 					cin >> std::setw(4) >> raw; cin.ignore(numeric_limits<streamsize>::max(), '\n');
-					// DEBUG: Imprime esto si falla en parsear a chars
 					if (cin.fail()){
-						cout << "FAILED" <<endl;
+						cout << "FAILED in OBJECTIVE" <<endl;
 					}
 					// Chequeo símbolos correctos
 					// Chequeo salida
 					if (raw[0] == 'q'){ exit = true; break; }
 					// Chequeo caracter fila
-					parsed = raw[0] - '0'; // Char numérico->Valor int real
+					parsed = raw[0] - '0';
 					switch(parsed){
 						case 0:
-							piece_fil = 0; break;
+							obj_fil = 0; break;
 						case 1:
-							piece_fil = 1; break;
+							obj_fil = 1; break;
 						case 2:
-							piece_fil = 2; break;
+							obj_fil = 2; break;
 						case 3:
-							piece_fil = 3; break;
+							obj_fil = 3; break;
 						case 4:
-							piece_fil = 4; break;
+							obj_fil = 4; break;
 						default:
 							cout << "Fila invalida" << endl; break;
 					}
-					if (piece_fil == -1) { continue; }
-					
+					if (obj_fil == -1) { continue; }
 					// Chequeo caracter guión central "-"
-					if (raw[1] != '-') { cout << "Separador fil-col invalido." << endl; continue; }
-					
+					if (raw[1] != '-') { cout << "Separador fil-col invalido." << endl; continue; }					
 					// Chequeo caracter columna
 					parsed = raw[2] - '0'; // Char numérico->Valor int real
 					switch(parsed){
 						case 0:
-							piece_col = 0; break;
+							obj_col = 0; break;
 						case 1:
-							piece_col = 1; break;
+							obj_col = 1; break;
 						case 2:
-							piece_col = 2; break;
+							obj_col = 2; break;
 						case 3:
-							piece_col = 3; break;
+							obj_col = 3; break;
 						case 4:
-							piece_col = 4; break;
+							obj_col = 4; break;
 						default:
 							cout << "Columna invalida" << endl; break;
 					}
-					if (piece_col == -1) { continue; }
-					
-					//----DEBUG-------
-					// cout << "Fila: " << piece_fil << " Columna: "<< piece_col << endl;
-					// cin.get();
-					//----------------
-					
-					
-					//exit = true;
+					if (obj_col == -1) { continue; }
+
+					parsed_move = true;
 				}
+
+				// Realización efectiva del movimiento con tableros y chequeos de validez
+				bitset<25> piece_board = board.bitset_from_index(board.getIndex(piece_fil * 5 + piece_col));
+				bitset<25> new_pos_board = board.bitset_from_index(board.getIndex(obj_fil * 5 + obj_col));
+				bitset<25> team_board = (turn == team_to_number["RED"]) ? board.red_board : board.black_board;
+				// Resultado. Si es inválido, se repite ciclo de función.
+				bool result = board.move_piece(piece_board, new_pos_board, board.board, team_board);
+				if (result == false ) { continue; }
+				// Cambio de turno
+				if (turn == team_to_number["RED"]) { turn = team_to_number["BLACK"]; }
+				else {turn = team_to_number["RED"];}
+				// Confirmación de movimiento hecho
+				valid_move = true;
 			}
-		}
+		}		
 	};
 }
-
-
-
-
-
-
-
-
-
 #endif

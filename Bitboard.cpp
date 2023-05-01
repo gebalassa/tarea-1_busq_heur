@@ -70,6 +70,7 @@ namespace AllQueensChess {
 			// 2) Mover pieza
 			board = board & ~piece;
 			board = board | new_pos;
+			return true;
 		}
 
 		// Detección de victoria (4 en línea). Recibe tabla de un equipo
