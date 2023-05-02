@@ -3,7 +3,6 @@
 #include "Mask.cpp"
 #include <iostream>
 #include <bitset>
-#include <intrin.h>
 #include <stdexcept>
 #include <string>
 
@@ -137,16 +136,24 @@ namespace AllQueensChess {
 		}
 
 		// Bitset desde índice de pieza
-		int index_from_bitset(bitset<25> piece) {
+		int index_from_bitset(bitset<25>& piece) {
 			unsigned long index;
 			if (piece.none()) {
 				throw invalid_argument("Empty bitset!");
 			}
 			else {
-				_BitScanForward(&index, piece.to_ulong());
-				index = getIndex(index);
+				find_piece_index(index, piece.to_ulong());
+				index = getIndex((int) index);
 			}
 			return index;
+		}
+		// Búsqueda de índice shifteando a la derecha.
+		void find_piece_index(unsigned long& index, unsigned long piece) {
+			int counter = -1;
+			if (piece == 0) { throw invalid_argument("Empty bitset!"); }			
+			else if (piece % 2 != 0) { throw invalid_argument("Invalid piece board! Only single on-bit needed."); }			
+			while (piece != 0) { piece = piece >> 1; counter++; }
+			index = counter;
 		}
 
 		// Chequear existencia y validez de pieza

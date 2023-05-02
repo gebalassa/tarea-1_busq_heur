@@ -1,11 +1,12 @@
 ﻿  AllQueensChessGame.cpp
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(321,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(336,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(328,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(343,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
   Bitboard.cpp
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(321,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(336,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(328,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(343,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Mask.cpp
   testing.cpp
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(321,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(336,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(328,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\Bitboard.cpp(343,1): warning C4267: 'inicializando': conversión de 'size_t' a 'int'; posible pérdida de datos
   Generando código...
   AllQueensChess.vcxproj -> C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\x64\Debug\AllQueensChess.exe

@@ -13,18 +13,6 @@ using namespace AllQueensChess;
 
 namespace AllQueensChess {
 	class AllQueensChessGame {
-		// IMPRIME TABLERO + TURNO ACTUAL
-		// SOLICITA PIEZA A MOVER
-		// VERIFICA VALIDEZ (Posicion valida (en rango, sintaxis), posicion no-vacia, pieza del jugador del turno)
-		// // SI NO, CONSULTA POS INICIAL DE NUEVO^ 
-		// SOLICITA POSICION A MOVER
-		// VERIFICA VALIDEZ DE POS NUEVA (Posicion válida, posicion aceptable con valid_moves())
-		// SI NO, CONSULTA POS FINAL DE NUEVO ^
-		// CHEQUEO DE VICTORIA (TODO: FUNCION DE CHEQUEO DE VICTORIA!!!!! 4 EN LINEA!!!)
-		// -- NO?
-		// CAMBIA TURNO, VUELVE AL PRINCIPIO
-		// -- SI?
-		// -- IMPRIMIR ESTADO FINAL DEL TABLERO, GANADOR, NUM. DE TURNOS
 	public:
 		map<int, string> number_to_team = { {0,"RED"}, {1, "BLACK"} };
 		map<string, int> team_to_number = { {"RED", 0}, {"BLACK", 1}};
@@ -37,7 +25,13 @@ namespace AllQueensChess {
 			// GAME LOOP
 			srand((unsigned int) time(NULL));
 			// INTRO
-			cout << "Bienvenido a AllQueensChess" << "\n\n";
+			cout << "                  --- Bienvenido a AllQueensChess ---" << "\n";
+			cout << "         (por Gabriel Balassa, basado en juego del mismo nombre)" << "\n";
+			cout << "   El objetivo es colocar 4 reinas de tu color (RED (R) o BLACK (N)) en línea." << "\n";
+			cout << "Las reinas pueden bloquearse, pero no capturarse. Se mueven tal y como en el ajedrez." << "\n";
+			cout << "       Los jugadores se turnan ingresando coordenadas <fila>-<columna>." << "\n";
+			cout << "                           ¡Mucha suerte!" << "\n";
+			cout << "            Ingrese \'q\' en cualquier momento para salir." << "\n\n";
 			board.print_board_teams();
 			int initial_turn = (int) rand() % 2; //0 o 1
 			turn = initial_turn;
