@@ -87,7 +87,7 @@ namespace AllQueensChess {
 
 		// Imprime tablero entregado
 		void print_board(bitset<25> board) {
-			for (int i = board.size() - 1; i >= 0; i--) {
+			for (int i = (int) board.size() - 1; i >= 0; i--) {
 				if (i % 5 == 0) {
 					cout << board[i];
 					cout << "\n";
@@ -98,7 +98,7 @@ namespace AllQueensChess {
 			}
 		}
 
-		// DEBUG: Imprimir todas las máscaras de un arreglo
+		// DEBUG: Imprimir todas las mÃ¡scaras de un arreglo
 		template <int n>
 		void debug_print_masks(const bitset<25>(&masks)[n]) {
 			cout << "size: " << sizeof(masks) / sizeof(masks[0]) << "\n";

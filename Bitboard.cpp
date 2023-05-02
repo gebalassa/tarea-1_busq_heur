@@ -13,17 +13,17 @@ namespace AllQueensChess {
 	class Bitboard {
 	public:
 		const bitset<25> initial_board = 0b1111100000100010000011111; // Tablero base
-		const bitset<25>  red_board = 0b1010100000000010000001010; // Tablero rojo
-		const bitset<25>  black_board = 0b0101000000100000000010101; // Tablero negro
+		bitset<25>  red_board = 0b0101000000100000000010101; // Tablero rojo
+		bitset<25>  black_board = 0b1010100000000010000001010; // Tablero negro
 		bitset<25> board = initial_board;
 		Mask mask = Mask();
 
 		// Movimientos posibles totales
 		bitset<25> valid_moves(bitset<25>& board, bitset<25>& piece) {
-			// Õndice jugador
+			// √çndice jugador
 			int index = index_from_bitset(piece);
 			//cout << "Index: " << index << "\n";
-			// M·scaras
+			// M√°scaras
 			bitset<25> hmask = mask.hmasks[index / 5];
 			//print_board(hmask); cout << "\n";
 			bitset<25> vmask = mask.vmasks[index % 5];
@@ -32,7 +32,7 @@ namespace AllQueensChess {
 			//print_board(dmask); cout << "\n";
 			bitset<25> antidmask = mask.antidmasks[index];
 			//print_board(antidmask); cout << "\n";
-			// Movimientos V·lidos
+			// Movimientos V√°lidos
 			bitset<25> hmoves = line_moves(board, piece, hmask);
 			bitset<25> vmoves = line_moves(board, piece, vmask);
 			bitset<25> dmoves = line_moves(board, piece, dmask);
@@ -41,7 +41,7 @@ namespace AllQueensChess {
 			return moves;
 		}
 
-		// Movimientos posibles mediante una m·scara lineal (Ej.:hor, ver, diag, antidiag)
+		// Movimientos posibles mediante una m√°scara lineal (Ej.:hor, ver, diag, antidiag)
 		bitset<25> line_moves(bitset<25>& board, bitset<25>& piece, bitset<25>& mask) {
 			// Abreviaciones
 			bitset<25> om = board & mask;
@@ -64,16 +64,23 @@ namespace AllQueensChess {
 		bool move_piece(bitset<25>& piece, bitset<25>& new_pos, bitset<25>& board, bitset<25>& team_board) {
 			//Chequeos
 			// 1) Validez de pieza
-			if (!is_piece_valid(piece, team_board)) { cout << "ERROR: Pieza inv·lida\n";  return false; }
-			else if (!is_position_empty(new_pos)) { cout << "ERROR: Casilla ya est· ocupada\n"; return false; }
+			bitset<25> empty = 0b0;
+			if (!is_piece_valid(piece, team_board)) { cout << "ERROR: Pieza inv√°lida\n";  return false; }
+			else if (!is_position_empty(new_pos)) { cout << "ERROR: Casilla ya est√° ocupada\n"; return false; }
+			else if ((valid_moves(board, piece) & new_pos) == empty) { cout << "ERROR: Movida ilegal\n"; return false; }
 
 			// 2) Mover pieza
 			board = board & ~piece;
 			board = board | new_pos;
+
+			// 3) Mover pieza en tablero del equipo
+			team_board = team_board & ~piece;
+			team_board = team_board | new_pos;
+
 			return true;
 		}
 
-		// DetecciÛn de victoria (4 en lÌnea). Recibe tabla de un equipo
+		// Detecci√≥n de victoria (4 en l√≠nea). Recibe tabla de un equipo
 		bool is_victory(bitset<25>& team_board) {
 			int counter = 0;
 			bitset<25> empty = 0b0;
@@ -107,7 +114,6 @@ namespace AllQueensChess {
 				current_state =
 					erode(current_state, 1, "lower_right_corner");
 				counter++;
-				print_board(current_state); cout << "\n";
 			}
 			if (counter >= 4) { return true; }
 			else { counter = 0; current_state = initial_state; }
@@ -115,11 +121,11 @@ namespace AllQueensChess {
 			return false;
 		}
 
-		// Õndice REAL, desde esquina superior izq. a esq. inf. der.
+		// √çndice REAL, desde esquina superior izq. a esq. inf. der.
 		int getIndex(int raw_index) {
 			return 24 - raw_index;
 		}
-		// Õndice de pieza desde bitset
+		// √çndice de pieza desde bitset
 		bitset<25> bitset_from_index(int raw_index) {
 			if (raw_index < 0 || raw_index > 24) {
 				throw invalid_argument("Index between 0-24.");
@@ -130,7 +136,7 @@ namespace AllQueensChess {
 			return canvas;
 		}
 
-		// Bitset desde Ìndice de pieza
+		// Bitset desde √≠ndice de pieza
 		int index_from_bitset(bitset<25> piece) {
 			unsigned long index;
 			if (piece.none()) {
@@ -149,21 +155,21 @@ namespace AllQueensChess {
 			else return true;
 		}
 
-		// Chequear si posiciÛn objetivo est· vacÌa
+		// Chequear si posici√≥n objetivo est√° vac√≠a
 		bool is_position_empty(bitset<25>& position) {
 			if ((position & board).any()) { return false; }
 			else return true;
 		}
 
-		// ErosiÛn
-		// Genera erosiÛn 'times' veces sobre la tabla. Retorna tabla erosionada.
+		// Erosi√≥n
+		// Genera erosi√≥n 'times' veces sobre la tabla. Retorna tabla erosionada.
 		bitset<25> erode(bitset<25> b, int times, string direction = "all") {
 
-			// M·scaras para traslape izquierda y derecha
-			// (lados al revÈs pues origen es esq. sup. izq)
+			// M√°scaras para traslape izquierda y derecha
+			// (lados al rev√©s pues origen es esq. sup. izq)
 			bitset<25> left_mask = 0b1000010000100001000010000; left_mask.flip();
 			bitset<25> right_mask = 0b0000100001000010000100001; right_mask.flip();
-			// M·scaras diagonales ( al revÈs por origen esq sup izq)
+			// M√°scaras diagonales ( al rev√©s por origen esq sup izq)
 			bitset<25> antidiag_mask = 0b0000100001000010000111111; antidiag_mask.flip();
 			bitset<25> diag_mask = 0b1111100001000010000100001; diag_mask.flip();
 
@@ -223,16 +229,15 @@ namespace AllQueensChess {
 				return b;
 			}
 			else {
-				throw invalid_argument("°DirecciÛn inv·lida!");
+				throw invalid_argument("¬°Direcci√≥n inv√°lida!");
 			}
-
 		}
 
-		// DilataciÛn
-		// Genera dilataciÛn 'times' veces sobre la tabla. Retorna tabla dilatada.
+		// Dilataci√≥n
+		// Genera dilataci√≥n 'times' veces sobre la tabla. Retorna tabla dilatada.
 		bitset<25> dilate(bitset<25> b, int times) {
-			// M·scaras para traslape izquierda y derecha
-			// (lados al revÈs pues origen es esq. sup. izq)
+			// M√°scaras para traslape izquierda y derecha
+			// (lados al rev√©s pues origen es esq. sup. izq)
 			bitset<25> right_mask = 0b0000100001000010000100001; right_mask.flip();
 			bitset<25> left_mask = 0b1000010000100001000010000; left_mask.flip();
 
@@ -271,13 +276,13 @@ namespace AllQueensChess {
 			return ans;
 		}
 
-		// MultiplicaciÛn de bitsets (https://alikhuram.wordpress.com/2013/05/15/performing-arithmetic-on-bitsets-in-c/)
+		// Multiplicaci√≥n de bitsets (https://alikhuram.wordpress.com/2013/05/15/performing-arithmetic-on-bitsets-in-c/)
 		// **Se prefiere usar "<< 1" para mult. por 2, por orden!!!**
 		bitset<25> bitsetMultiply(bitset<25>& x, bitset<25>& y) {
-			bitset<25> copyx = x; // Copia para evitar modificar el puntero dentro de la funciÛn
+			bitset<25> copyx = x; // Copia para evitar modificar el puntero dentro de la funci√≥n
 			bitset<25> tmp = copyx;
 			bitset<25> ans = copyx;
-			copyx.reset(); // AquÌ se usa la copia evitando modif. el puntero
+			copyx.reset(); // Aqu√≠ se usa la copia evitando modif. el puntero
 
 			// we want to minimize the number of times we shift and add
 			if (tmp.count() < y.count()) {
@@ -299,7 +304,7 @@ namespace AllQueensChess {
 			return ans;
 		}
 
-		// InversiÛn (https://stackoverflow.com/questions/48556547/how-to-reverse-bits-in-a-bitset)
+		// Inversi√≥n (https://stackoverflow.com/questions/48556547/how-to-reverse-bits-in-a-bitset)
 		bitset<25> reverse(bitset<25> b) {
 			for (std::size_t i = 0; i < 25 / 2; ++i) {
 				bool t = b[i];
@@ -323,6 +328,48 @@ namespace AllQueensChess {
 		}
 		// Por defecto
 		void print_board() { print_board(board); }
+
+		// Imprime tablero con EQUIPOS
+		void print_board_teams(const bitset<25>& red, const bitset<25>& black) {
+			cout << "+ 0 1 2 3 4" << "\n";
+			cout << "0 ";
+			for (int i = board.size() - 1; i >= 0; i--) {
+				if (i % 5 == 0 && i != 0) {
+					if (board[i] == 0) {
+						cout << "0" << "\n" << (5 - i / 5) << " ";
+					}
+					else if (board[i] == red[i]) {
+						cout << "R" << "\n" << (5 - i / 5) << " ";
+					}
+					else if (board[i] == black[i]) {
+						cout << "N" << "\n" << (5 - i / 5) << " ";
+					}
+				}
+				else if (i == 0) {
+					if (board[i] == 0) {
+						cout << "0" << "\n";
+					}
+					else if (board[i] == red[i]) {
+						cout << "R" << "\n";
+					}
+					else if (board[i] == black[i]) {
+						cout << "N" << "\n";
+					}
+				}
+				else {
+					if (board[i] == 0) {
+						cout << "0" << " ";
+					}
+					else if (board[i] == red[i]) {
+						cout << "R" << " ";
+					}
+					else if (board[i] == black[i]) {
+						cout << "N" << " ";
+					}
+				}
+			}
+		}
+		void print_board_teams() { print_board_teams(red_board, black_board); }
 
 	private:
 		// Suma entre booleanos. Usado en suma de bitsets. (https://www.geeksforgeeks.org/arithmetic-operations-with-stdbitset-in-c/)
