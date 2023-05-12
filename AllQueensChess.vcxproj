@@ -142,6 +142,7 @@
     <ClCompile Include="AllQueensChessGame.cpp" />
     <ClCompile Include="Bitboard.cpp" />
     <ClCompile Include="Mask.cpp" />
+    <ClCompile Include="RandomPlayer.cpp" />
     <ClCompile Include="testing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
