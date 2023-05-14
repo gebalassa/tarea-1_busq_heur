@@ -11,11 +11,16 @@ using namespace std;
 namespace AllQueensChess {
 	class Bitboard {
 	public:
-		const bitset<25> initial_board = 0b1111100000100010000011111; // Tablero base
+		bitset<25> initial_board = 0b1111100000100010000011111; // Tablero base
 		bitset<25>  red_board = 0b0101000000100000000010101; // Tablero rojo
 		bitset<25>  black_board = 0b1010100000000010000001010; // Tablero negro
-		bitset<25> board = initial_board;
-		Mask mask = Mask();
+		bitset<25> board;
+		Mask mask;
+
+		Bitboard() {
+			mask = Mask();
+			board = initial_board;
+		};
 
 		// Movimientos posibles totales
 		bitset<25> valid_moves(bitset<25>& board, bitset<25>& piece) {
@@ -121,7 +126,7 @@ namespace AllQueensChess {
 		}
 
 		// Índice REAL, desde esquina superior izq. a esq. inf. der.
-		int getIndex(int raw_index) {
+		static int getIndex(int raw_index) {
 			return 24 - raw_index;
 		}
 		// Índice de pieza desde bitset
@@ -151,7 +156,7 @@ namespace AllQueensChess {
 		void find_piece_index(unsigned long& index, unsigned long piece) {
 			int counter = -1;
 			if (piece == 0) { throw invalid_argument("Empty bitset!"); }			
-			else if (piece % 2 != 0) { throw invalid_argument("Invalid piece board! Only single on-bit needed."); }			
+			else if (piece != 1 && piece % 2 != 0) { throw invalid_argument("Invalid piece board! Only single on-bit needed."); }			
 			while (piece != 0) { piece = piece >> 1; counter++; }
 			index = counter;
 		}
@@ -325,7 +330,7 @@ namespace AllQueensChess {
 		void print_board(bitset<25> board) {
 			cout << "+ 0 1 2 3 4" << "\n";
 			cout << "0 ";
-			for (int i = board.size() - 1; i >= 0; i--) {
+			for (int i = (int)board.size() - 1; i >= 0; i--) {
 				if (i % 5 == 0 && i != 0) {
 					cout << board[i] << "\n" << (5 - i / 5) << " ";
 				}
@@ -340,10 +345,10 @@ namespace AllQueensChess {
 		void print_board_teams(const bitset<25>& red, const bitset<25>& black) {
 			cout << "+ 0 1 2 3 4" << "\n";
 			cout << "0 ";
-			for (int i = board.size() - 1; i >= 0; i--) {
+			for (int i = (int)board.size() - 1; i >= 0; i--) {
 				if (i % 5 == 0 && i != 0) {
 					if (board[i] == 0) {
-						cout << "0" << "\n" << (5 - i / 5) << " ";
+						cout << "-" << "\n" << (5 - i / 5) << " ";
 					}
 					else if (board[i] == red[i]) {
 						cout << "R" << "\n" << (5 - i / 5) << " ";
@@ -354,7 +359,7 @@ namespace AllQueensChess {
 				}
 				else if (i == 0) {
 					if (board[i] == 0) {
-						cout << "0" << "\n";
+						cout << "-" << "\n";
 					}
 					else if (board[i] == red[i]) {
 						cout << "R" << "\n";
@@ -365,7 +370,7 @@ namespace AllQueensChess {
 				}
 				else {
 					if (board[i] == 0) {
-						cout << "0" << " ";
+						cout << "-" << " ";
 					}
 					else if (board[i] == red[i]) {
 						cout << "R" << " ";

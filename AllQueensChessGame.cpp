@@ -1,11 +1,14 @@
 #ifndef ALLQUEENSCHESSGAME
 #define ALLQUEENSCHESSGAME
 #include <iostream>
+#include <string>
 #include <map>
 #include <bitset>
 #include <time.h>
+#include <utility>
 #include <iomanip>
 #include <limits>
+#include "Player.h"
 #include "Bitboard.cpp"
 
 using namespace std;
@@ -17,13 +20,77 @@ namespace AllQueensChess {
 		map<int, string> number_to_team = { {0,"RED"}, {1, "BLACK"} };
 		map<string, int> team_to_number = { {"RED", 0}, {"BLACK", 1}};
 		int turn = 0;
-		Bitboard board = Bitboard();
+		Bitboard board;
 		bool victory = false;
 		bool exit = false;
 		
-		void initialize() {
+		AllQueensChessGame() {
+			board = Bitboard();
+		}
+
+		// Juego entre dos IAs
+		void play_ai_game(Player& red, Player& black, int length, bool isPrinted = false) {
+			restart();
+			int counter = 0;
+			int initial_turn = (int)rand() % 2;
+			turn = initial_turn;
+
+			cout << "TABLERO INICIAL" << endl;
+			board.print_board_teams(); cout << endl;
+			while (!victory && !exit && counter < length) {
+				// Info
+				if (isPrinted) {
+					cout << "Turno:" << number_to_team[turn] << endl;
+					cout << "Jugada:" << counter + 1 << endl;
+				}
+				//Jugada
+				if (number_to_team[turn] == "RED") {
+					pair<bitset<25>, bitset<25>> move = red.move(board.board, board.red_board);
+					board.move_piece(move.first, move.second, board.board,
+						board.red_board);
+				}
+				else if (number_to_team[turn] == "BLACK") {
+					pair<bitset<25>, bitset<25>> move = black.move(board.board, board.black_board);
+					board.move_piece(move.first, move.second, board.board,
+						board.black_board);
+				}
+				if (isPrinted) {
+					board.print_board_teams(); cout << endl;
+				}
+
+				// Chequeo victoria
+				if (board.is_victory((turn == team_to_number["RED"]) ? board.red_board : board.black_board)) {
+					cout << "¡FIN! Ha ganado el equipo " << number_to_team[turn] << endl;
+					cout << "Turno:" << number_to_team[turn] << endl;
+					cout << "Jugada:" << counter + 1 << endl;
+					board.print_board_teams(); cout << endl;
+					cout << "Presione ENTER para cerrar" << endl;
+					cin.get();
+					victory = true;
+					break;
+				}
+				// Cambio de turno
+				if (turn == team_to_number["RED"]) { turn = team_to_number["BLACK"]; }
+				else { turn = team_to_number["RED"]; }
+				// Aumenta contador
+				counter++;
+			}
+			// Acaban jugadas disponibles
+			if (counter == length) {
+				cout << "¡Se acabaron las jugadas!" << endl;
+				cout << "Turno:" << number_to_team[turn] << endl;
+				cout << "Jugada:" << counter << endl;
+				board.print_board_teams(); cout << endl;
+				cout << "Presione ENTER para cerrar" << endl;
+				cin.get();
+			}
+		}
+
+		// Juego entre dos humanos
+		void play_human_game() {
 			// GAME LOOP
 			srand((unsigned int) time(NULL));
+			restart();
 			// INTRO
 			cout << "                  --- Bienvenido a AllQueensChess ---" << "\n";
 			cout << "         (por Gabriel Balassa, basado en juego del mismo nombre)" << "\n";
@@ -208,7 +275,15 @@ namespace AllQueensChess {
 				// Confirmación de movimiento hecho
 				valid_move = true;
 			}
-		}		
+		}
+private:
+	// Reinicio de variables
+		void restart() {
+			victory = false;
+			exit = false;
+			turn = 0;
+			board = Bitboard();
+		}
 	};
 }
 #endif

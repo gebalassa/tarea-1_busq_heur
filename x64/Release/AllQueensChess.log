@@ -1,0 +1,10 @@
+﻿  AllQueensChessGame.cpp
+  Bitboard.cpp
+  Mask.cpp
+  RandomPlayer.cpp
+  testing.cpp
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+  All 486 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  AllQueensChess.vcxproj -> C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\x64\Release\AllQueensChess.exe

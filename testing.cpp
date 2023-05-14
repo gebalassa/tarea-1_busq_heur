@@ -4,6 +4,7 @@
 #include <bitset>
 #include "Bitboard.cpp"
 #include "Mask.cpp"
+#include "RandomPlayer.cpp"
 #include "AllQueensChessGame.cpp"
 
 
@@ -129,9 +130,9 @@ int main() {
 	//b.print_board(b.dilate(empty, 4)); cout << "\n";
 
 	// Test de erosión
-	bitset<25> full = 0b0; full.flip();
-	full[11] = 0;
-	full[13] = 0;
+	//bitset<25> full = 0b0; full.flip();
+	//full[11] = 0;
+	//full[13] = 0;
 	//b.print_board(full); cout << "\n";
 	//b.print_board(b.erode(full, 2)); cout << "\n";
 	//b.print_board(b.erode(full, 3)); cout << "\n";
@@ -166,9 +167,37 @@ int main() {
 	////b.print_board(b.erode(fake_team_board, 1, "lower_right_corner"));
 	//cout << b.is_victory(fake_team_board) << "\n";
 
+	// RandomPlayer
+	RandomPlayer rplayer = RandomPlayer();
+	////Imprimir piezas movibles de mi equipo
+	//rplayer.separate_piece_boards(game.board.black_board);
+	//for (int i = 0; i < rplayer.pieces.size(); i++) {
+	//	game.board.print_board(rplayer.pieces[i]); cout << endl;
+	//}
+	//// Imprimir movimientos generados
+	//rplayer.generate(game.board.board, game.board.red_board);
+	//for (int i = 0; i < rplayer.children.size(); i++) {
+	//	game.board.print_board(rplayer.children[i]); cout << endl;
+	//}
+	//// Movimiento al azar
+	//srand((unsigned int)time(NULL));
+	//pair<bitset<25>, bitset<25>> result = rplayer.move(game.board.board,
+	//	game.board.red_board);
+	//game.board.print_board(result.first); cout << endl;
+	//game.board.print_board(result.second);
+	//// Hijos
+	//pair<bitset<25>, bitset<25>> result = rplayer.move(game.board.board,
+	//	game.board.red_board);
+	//rplayer.print_children();
+
 	// INITIALIZE
-	game.initialize();
-	
+	// Humano
+	//game.play_human_game();
+	// Random
+	srand((unsigned int)time(NULL));
+	RandomPlayer r1 = RandomPlayer();
+	RandomPlayer r2 = RandomPlayer();
+	game.play_ai_game(r1, r2, 50, true);
 
 
 	return 1;

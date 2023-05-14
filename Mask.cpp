@@ -8,7 +8,7 @@ using namespace std;
 namespace AllQueensChess {
 	class Mask {
 	public:
-		const bitset<25> hmasks[5] = {
+		bitset<25> hmasks[5] = {
 			0b1111100000000000000000000,
 			0b0000011111000000000000000,
 			0b0000000000111110000000000,
@@ -16,7 +16,7 @@ namespace AllQueensChess {
 			0b0000000000000000000011111
 		};
 
-		const bitset<25> vmasks[5] = {
+		bitset<25> vmasks[5] = {
 			0b1000010000100001000010000,
 			0b0100001000010000100001000,
 			0b0010000100001000010000100,
@@ -24,7 +24,7 @@ namespace AllQueensChess {
 			0b0000100001000010000100001
 		};
 
-		const bitset<25> dmasks[25] = {
+		bitset<25> dmasks[25] = {
 			0b1000000000000000000000000, // 00
 			0b0100010000000000000000000, // 01
 			0b0010001000100000000000000, // 02
@@ -52,7 +52,7 @@ namespace AllQueensChess {
 			0b0000000000000000000000001, // 24
 		};
 
-		const bitset<25> antidmasks[25] = {
+		bitset<25> antidmasks[25] = {
 			0b1000001000001000001000001, // 00
 			0b0100000100000100000100000, // 01
 			0b0010000010000010000000000, // 02

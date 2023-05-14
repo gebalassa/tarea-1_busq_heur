@@ -1,35 +1,34 @@
 #ifndef RANDOMPLAYER
 #define RANDOMPLAYER
 #include <bitset>
+#include <vector>
+#include <utility>
+#include <stdexcept>
+#include <time.h>  
+#include "Player.h"  
+#include "Bitboard.cpp"
 
 using namespace std;
 using namespace AllQueensChess;
 
 namespace AllQueensChess {
-	class RandomPlayer {
+	class RandomPlayer : public Player {
 	public:
-		static void move(bitset<25> board, bitset<25> team) {
+		pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team) {
+			clean();
+			generate(board, team);
 
+			// Regresa movimiento random (<pieza>-<pos.objetivo>)
+			int rindex = rand() % children.size();
+			pair<bitset<25>, bitset<25>> selected_pair = children[rindex];
+			return selected_pair;
 		}
 
-		static void generate(bitset<25> board, bitset<25> team) {
-			//  - Bitboard.valid_moves() obtiene todos los movimientos
-			// de una pieza determinada. Cada uno de esos movimientos
-			// debe anexarse por separado a una lista generada: Para
-			// Separar los movimientos se necesita una función que itere
-			// y separe cada movimiento legal para agregarlo.
-			// - El mismo proceso se debe aplicar a cada pieza de mi equipo.
-			// - El resultado será una lista con todas las movidas posibles
-			// desde un estado dado y siendo el turno de mi equipo.
-			//
-			// - Luego, en el caso del algoritmo RANDOM, se escoge uno de estos
-			// objetos al azar.
-			// DIFICULTADES:
-			// 1. Funcion que separe el tablero de movidas legales en
-			// multiples tableros de una pieza.
-			//
-			//
-		}
+		// Limpia listas
+		void clean(){
+			children.clear();
+			pieces.clear();
+		}		
 	};
 }
 
