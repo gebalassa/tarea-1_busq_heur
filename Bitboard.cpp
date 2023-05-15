@@ -22,6 +22,13 @@ namespace AllQueensChess {
 			board = initial_board;
 		};
 
+		// Setear tablero en una posición determinada
+		void set_board(bitset<25>& board, bitset<25>& red_team) {
+			this->board = board;
+			red_board = red_team;
+			black_board = board & ~red_team;
+		}
+
 		// Movimientos posibles totales
 		bitset<25> valid_moves(bitset<25>& board, bitset<25>& piece) {
 			// Índice jugador
@@ -70,7 +77,7 @@ namespace AllQueensChess {
 			// 1) Validez de pieza
 			bitset<25> empty = 0b0;
 			if (!is_piece_valid(piece, team_board)) { cout << "ERROR: Pieza inválida\n";  return false; }
-			else if (!is_position_empty(new_pos)) { cout << "ERROR: Casilla ya está ocupada\n"; return false; }
+			else if (!is_position_empty(new_pos, board)) { cout << "ERROR: Casilla ya está ocupada\n"; return false; }
 			else if ((valid_moves(board, piece) & new_pos) == empty) { cout << "ERROR: Movida ilegal\n"; return false; }
 
 			// 2) Mover pieza
@@ -168,9 +175,12 @@ namespace AllQueensChess {
 		}
 
 		// Chequear si posición objetivo está vacía
-		bool is_position_empty(bitset<25>& position) {
+		bool is_position_empty(bitset<25>& position, bitset<25>& board) {
 			if ((position & board).any()) { return false; }
 			else return true;
+		}
+		bool is_position_empty(bitset<25>& position) {
+			return is_position_empty(position, this->board);
 		}
 
 		// Erosión

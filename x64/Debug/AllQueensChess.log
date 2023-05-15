@@ -1,9 +1,2 @@
-﻿  AllQueensChessGame.cpp
-  Bitboard.cpp
-  Mask.cpp
-  NegamaxPlayer.cpp
-  Player.cpp
-  RandomPlayer.cpp
-  testing.cpp
-  Generando código...
+﻿  testing.cpp
   AllQueensChess.vcxproj -> C:\Users\gbala\OneDrive\Escritorio\WORKSPACE - TAREA 1\AllQueensChess\x64\Debug\AllQueensChess.exe

@@ -2,9 +2,11 @@
 #define TESTING
 #include <iostream>
 #include <bitset>
+#include "Statistics.h"
 #include "Bitboard.cpp"
 #include "Mask.cpp"
 #include "RandomPlayer.cpp"
+#include "NegamaxPlayer.cpp"
 #include "AllQueensChessGame.cpp"
 
 
@@ -17,8 +19,8 @@ int main() {
 	system("chcp 65001 > nul");
 #endif
 
-	Bitboard b = Bitboard();
-
+	//Bitboard b = Bitboard();
+	
 	//int a = 10;
 	//a = a << 1;
 	//cout << a;
@@ -67,12 +69,12 @@ int main() {
 
 	// 2da Prueba Mov Posibles
 	//bitset<25> two = 0b10; //cout << two.to_ulong();
-	bitset<25> fake_init_board = 0b0011101000111000011100111;
-	bitset<25> piece_board = 0b0000100000000000000000000;
-	bitset<25> hline_mask = 0b0000000000000001111100000;
-	bitset<25> vline_mask = 0b0100001000010000100001000;
-	bitset<25> dline_mask = 0b0000100010001000100010000;
-	bitset<25> antidline_mask = 0b1000001000001000001000001;
+	//bitset<25> fake_init_board = 0b0011101000111000011100111;
+	//bitset<25> piece_board = 0b0000100000000000000000000;
+	//bitset<25> hline_mask = 0b0000000000000001111100000;
+	//bitset<25> vline_mask = 0b0100001000010000100001000;
+	//bitset<25> dline_mask = 0b0000100010001000100010000;
+	//bitset<25> antidline_mask = 0b1000001000001000001000001;
 	// Abreviaciones
 	//bitset<25> om = fake_init_board & hline_mask;
 	//bitset<25> s = piece_board;
@@ -105,7 +107,7 @@ int main() {
 	//b.print_board(moves);
 
 	// Chequeo a través de AllQueensChessGame de Bitboard
-	AllQueensChessGame game = AllQueensChessGame();
+	//AllQueensChessGame game = AllQueensChessGame();
 	//game.board.print_board();
 	//game.board.print_board(game.board.red_board); cout "\n";
 	//game.board.print_board(game.board.black_board); cout "\n";
@@ -168,7 +170,8 @@ int main() {
 	//cout << b.is_victory(fake_team_board) << "\n";
 
 	// RandomPlayer
-	RandomPlayer rplayer = RandomPlayer();
+	//AllQueensChessGame game = AllQueensChessGame();
+	//RandomPlayer rplayer = RandomPlayer();
 	////Imprimir piezas movibles de mi equipo
 	//rplayer.separate_piece_boards(game.board.black_board);
 	//for (int i = 0; i < rplayer.pieces.size(); i++) {
@@ -190,14 +193,34 @@ int main() {
 	//	game.board.red_board);
 	//rplayer.print_children();
 
-	// INITIALIZE
-	// Humano
-	//game.play_human_game();
-	// Random
+	// NegamaxPlayer
 	srand((unsigned int)time(NULL));
-	RandomPlayer r1 = RandomPlayer();
-	RandomPlayer r2 = RandomPlayer();
-	game.play_ai_game(r1, r2, 50, true);
+	AllQueensChessGame game = AllQueensChessGame();
+	NegamaxPlayer p = NegamaxPlayer();
+	Bitboard b = Bitboard();
+	//// Prueba negamax por defecto (altura=0)
+	//auto result = p.move(game.board.board, game.board.red_board);
+	//b.print_board(result.first); cout << endl;
+	//b.print_board(result.second); cout << endl;
+	//// Prueba negamax altura=1
+	//auto result = p.move(game.board.board, game.board.red_board, 1);
+	//b.print_board(result.first); cout << endl;
+	//b.print_board(result.second); cout << endl;
+	// Prueba negamax altura=N
+	int N = 2;
+	auto result = p.move(game.board.board, game.board.red_board, N);
+	b.print_board(result.first); cout << endl;
+	b.print_board(result.second); cout << endl;
+	cout << Statistics::instance->negamax_visited_nodes << endl;
+
+	// INITIALIZE
+	//// Humano
+	//game.play_human_game();
+	//// Random
+	//srand((unsigned int)time(NULL));
+	//RandomPlayer r1 = RandomPlayer();
+	//RandomPlayer r2 = RandomPlayer();
+	//game.play_ai_game(r1, r2, 50, true);
 
 
 	return 1;
