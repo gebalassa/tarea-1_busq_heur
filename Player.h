@@ -15,7 +15,7 @@ namespace AllQueensChess {
 		vector<bitset<25>> pieces;
 
 		virtual ~Player() {};
-		virtual pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team) = 0;
+		virtual pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team, int height) = 0;
 		virtual void clean() = 0;
 		virtual void generate(bitset<25> board, bitset<25> team);
 		void separate_piece_boards(bitset<25>& team);

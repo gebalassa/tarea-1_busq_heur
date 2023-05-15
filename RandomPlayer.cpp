@@ -14,13 +14,14 @@ using namespace AllQueensChess;
 namespace AllQueensChess {
 	class RandomPlayer : public Player {
 	public:
-		pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team) {
+		pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team, int height = 0) {
 			clean();
 			generate(board, team);
 
 			// Regresa movimiento random (<pieza>-<pos.objetivo>)
 			int rindex = rand() % children.size();
 			pair<bitset<25>, bitset<25>> selected_pair = children[rindex];
+			
 			return selected_pair;
 		}
 
@@ -28,7 +29,7 @@ namespace AllQueensChess {
 		void clean(){
 			children.clear();
 			pieces.clear();
-		}		
+		}
 	};
 }
 

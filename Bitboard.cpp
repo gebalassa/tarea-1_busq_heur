@@ -132,6 +132,45 @@ namespace AllQueensChess {
 			return false;
 		}
 
+		// Máximo de reinas actualmente en línea. Recibe tabla de un equipo.
+		int longest_line(bitset<25>& team_board) {
+			int longest = 1;
+			int counter = 0;
+			bitset<25> empty = 0b0;
+			bitset<25> initial_state = team_board;
+			bitset<25> current_state = initial_state;
+			// Caso Horizontal
+			while (current_state != empty) {
+				current_state = erode(current_state, 1, "right");
+				counter++;
+			}
+			if (counter > longest) { longest = counter; }
+			counter = 0; current_state = initial_state;
+			// Caso Vertical
+			while (current_state != empty) {
+				current_state = erode(current_state, 1, "up");
+				counter++;
+			}
+			if (counter > longest) { longest = counter; }
+			counter = 0; current_state = initial_state;
+			// Caso diagonal
+			while (current_state != empty) {
+				current_state =
+					erode(current_state, 1, "upper_right_corner");
+				counter++;
+			}
+			if (counter > longest) { longest = counter; }
+			counter = 0; current_state = initial_state;
+			// Caso Antidiagonal
+			while (current_state != empty) {
+				current_state =
+					erode(current_state, 1, "lower_right_corner");
+				counter++;
+			}
+			if (counter > longest) { longest = counter; }
+			return longest;
+		}
+
 		// Índice REAL, desde esquina superior izq. a esq. inf. der.
 		static int getIndex(int raw_index) {
 			return 24 - raw_index;
@@ -155,15 +194,15 @@ namespace AllQueensChess {
 			}
 			else {
 				find_piece_index(index, piece.to_ulong());
-				index = getIndex((int) index);
+				index = getIndex((int)index);
 			}
 			return index;
 		}
 		// Búsqueda de índice shifteando a la derecha.
 		void find_piece_index(unsigned long& index, unsigned long piece) {
 			int counter = -1;
-			if (piece == 0) { throw invalid_argument("Empty bitset!"); }			
-			else if (piece != 1 && piece % 2 != 0) { throw invalid_argument("Invalid piece board! Only single on-bit needed."); }			
+			if (piece == 0) { throw invalid_argument("Empty bitset!"); }
+			else if (piece != 1 && piece % 2 != 0) { throw invalid_argument("Invalid piece board! Only single on-bit needed."); }
 			while (piece != 0) { piece = piece >> 1; counter++; }
 			index = counter;
 		}

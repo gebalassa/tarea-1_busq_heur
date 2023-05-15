@@ -16,11 +16,15 @@ using namespace AllQueensChess;
 namespace AllQueensChess {
 	class NegamaxPlayer : public Player {
 	public:
-		const int DEFAULT_HEIGHT = 0;
+		const int DEFAULT_HEIGHT = 1;
 		pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team, int height) {
+			// ESTADÍSTICAS
+			Statistics::instance->reset();
+			Statistics::instance->negamax_visited_nodes++;
+			//RELOJ
+			auto start = chrono::high_resolution_clock::now();
 			clean();
 			generate(board, team);
-
 			// Se aplica negamax sobre cada hijo inicial
 			int score = INT_MIN + 100;
 			auto curr_move_pair = children[0];
@@ -34,9 +38,24 @@ namespace AllQueensChess {
 				team = initial_team; // Reinicia variable
 				// Movimiento
 				b.move_piece(children[i].first, children[i].second, board, team); // Se modifica "board" y "team"
-				int result = p.negamax_score(board, team, height);
-				if (result > score) { score = result; curr_move_pair = children[i]; }
+				bitset<25> other_team = board & ~team;
+				int result = -p.negamax_score(board, other_team, height-1);
+				if (result > score) {
+					score = result; curr_move_pair = children[i];
+				}
 			}
+			// Reiniciar variables recibidas
+			board = initial_board;
+			team = initial_team;
+			// FIN ESTADÍSTICAS
+			// CIERRA RELOJ
+			auto end = chrono::high_resolution_clock::now();
+			Statistics::instance->move_time_micro = 
+				chrono::duration_cast<chrono::microseconds>(end - start).count();
+			// IMPRIMIR
+			cout << "Nodos: " << Statistics::instance->negamax_visited_nodes << endl;
+			cout << "Tiempo (us): " << Statistics::instance->move_time_micro << endl;
+			// Retornar movimiento
 			return curr_move_pair;
 		}
 		pair<bitset<25>, bitset<25>> move(bitset<25>& board, bitset<25>& team) {
@@ -53,13 +72,15 @@ namespace AllQueensChess {
 		int negamax_score(bitset<25> board, bitset<25> team, int height) {
 			// ESTADÍSTICAS
 			Statistics::instance->negamax_visited_nodes++;
-			// Si soy nodo victoria, retorno puntuación más alta (-100 para evitar desb)
+			// Si soy nodo victoria, retorno puntuación más alta
 			Bitboard b = Bitboard(); // Bitboard auxiliar (solo necesito funciones)
-			if (b.is_victory(team)) { return INT_MAX - 100; }
+			if (b.is_victory(team)) {
+				return 99999;
+			}
 			// Si la altura llegó a 0, me evalúo y retorno
-			if (height == 0) { return next_move_victory_heuristic(board, team); }
-			// Puntuación inicial negativa muy baja (+100 para evitar desbordamientos)
-			int score = INT_MIN + 100;
+			if (height == 0) { return queens_in_line_heuristic(board, team); }
+			// Puntuación inicial negativa muy baja
+			int score = -99999;
 			// Genero hijos de este nodo
 			generate(board, team);
 			// Por cada hijo aplico func. recursiva para obtener la mejor puntuación.
@@ -75,18 +96,19 @@ namespace AllQueensChess {
 				bitset<25> other_team = board & ~team;
 				// Hago recursión con NegamaxPlayer auxiliar
 				NegamaxPlayer p = NegamaxPlayer();
-				int result = -1 * p.negamax_score(board, other_team, height-1);
-				if (result > score) { score = result; }
+				int result = -p.negamax_score(board, other_team, height-1);
+				if (result > score) { 
+					score = result; 
+				}
 			}
 			// Retorno mayor puntuación
 			return score;
 		}
 
-		// Si puedo ganar en un solo movimiento, elijo ese movimiento,
-		// sino, elijo al azar.
-		int next_move_victory_heuristic(bitset<25>& board, bitset<25>& team) {
-			//TERMINARRRRR
-			return 10; // BORRAR
+		// Puntaje según número de reinas de mi equipo en línea
+		int queens_in_line_heuristic(bitset<25>& board, bitset<25>& team) {
+			Bitboard b = Bitboard();
+			return b.longest_line(team);
 		}
 	};
 }

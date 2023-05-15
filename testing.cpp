@@ -2,6 +2,7 @@
 #define TESTING
 #include <iostream>
 #include <bitset>
+#include <chrono>
 #include "Statistics.h"
 #include "Bitboard.cpp"
 #include "Mask.cpp"
@@ -20,7 +21,7 @@ int main() {
 #endif
 
 	//Bitboard b = Bitboard();
-	
+
 	//int a = 10;
 	//a = a << 1;
 	//cout << a;
@@ -69,7 +70,7 @@ int main() {
 
 	// 2da Prueba Mov Posibles
 	//bitset<25> two = 0b10; //cout << two.to_ulong();
-	//bitset<25> fake_init_board = 0b0011101000111000011100111;
+	//bitset<25> fake_init_board = 0b0010001000111000011100110;
 	//bitset<25> piece_board = 0b0000100000000000000000000;
 	//bitset<25> hline_mask = 0b0000000000000001111100000;
 	//bitset<25> vline_mask = 0b0100001000010000100001000;
@@ -120,6 +121,9 @@ int main() {
 	//bitset<25> ipe9 = game.board.bitset_from_index(9);
 	//cout << game.board.is_position_empty(ipe9) << "\n";
 	//cout << game.board.is_position_empty(piece_board) << "\n";
+	//// Test longest_line
+	//bitset<25> longest_line_board = 0b1000010000100000000010000;
+	//cout << game.board.longest_line(longest_line_board);
 
 	// Test de dilatación
 	//bitset<25> empty = 0b0;
@@ -193,36 +197,64 @@ int main() {
 	//	game.board.red_board);
 	//rplayer.print_children();
 
-	// NegamaxPlayer
-	srand((unsigned int)time(NULL));
-	AllQueensChessGame game = AllQueensChessGame();
-	NegamaxPlayer p = NegamaxPlayer();
-	Bitboard b = Bitboard();
-	//// Prueba negamax por defecto (altura=0)
+	//// NegamaxPlayer
+	//srand((unsigned int)time(NULL));
+	//AllQueensChessGame game = AllQueensChessGame();
+	//NegamaxPlayer p = NegamaxPlayer();
+	//Bitboard b = Bitboard();
+	//// Prueba negamax por defecto (altura=1)
 	//auto result = p.move(game.board.board, game.board.red_board);
 	//b.print_board(result.first); cout << endl;
 	//b.print_board(result.second); cout << endl;
-	//// Prueba negamax altura=1
-	//auto result = p.move(game.board.board, game.board.red_board, 1);
+	//// Prueba negamax altura=2
+	//auto result = p.move(game.board.board, game.board.red_board, 2);
 	//b.print_board(result.first); cout << endl;
 	//b.print_board(result.second); cout << endl;
-	// Prueba negamax altura=N
-	int N = 2;
-	auto result = p.move(game.board.board, game.board.red_board, N);
-	b.print_board(result.first); cout << endl;
-	b.print_board(result.second); cout << endl;
-	cout << Statistics::instance->negamax_visited_nodes << endl;
+	//// Prueba negamax altura=N
+	//int N = 1;
+	//auto result = p.move(game.board.board, game.board.red_board, N);
+	//b.print_board(result.first); cout << endl;
+	//b.print_board(result.second); cout << endl;
+	//cout << Statistics::instance->negamax_visited_nodes << endl;
 
 	// INITIALIZE
+	AllQueensChessGame game = AllQueensChessGame();
 	//// Humano
-	//game.play_human_game();
+	game.play_game();
 	//// Random
 	//srand((unsigned int)time(NULL));
 	//RandomPlayer r1 = RandomPlayer();
 	//RandomPlayer r2 = RandomPlayer();
 	//game.play_ai_game(r1, r2, 50, true);
+	//// Negamax
+	//NegamaxPlayer n1 = NegamaxPlayer();
+	//NegamaxPlayer n2 = NegamaxPlayer();
+	//game.play_ai_game(n1, n2, 200, 3, true);
 
+	// TESTS DE TIEMPO/NODOS AL REALIZAR MOVIMIENTO
+	//AllQueensChessGame game = AllQueensChessGame();
+	////1) RANDOM
+	//RandomPlayer r = RandomPlayer();
+	//auto start = chrono::high_resolution_clock::now();
+	//pair<bitset<25>, bitset<25>> result = r.move(game.board.board,
+	//	game.board.red_board);
+	//auto end = chrono::high_resolution_clock::now();
+	//auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+	//cout << duration.count() << endl;
+	////2) NEGAMAX
+	//Statistics::instance->reset();
+	//NegamaxPlayer n = NegamaxPlayer();
+	//auto start = chrono::high_resolution_clock::now();
+	////h = N
+	//int N = 4;
+	//pair<bitset<25>, bitset<25>> result = n.move(game.board.board,
+	//	game.board.red_board, N);
+	//auto end = chrono::high_resolution_clock::now();
+	//auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+	//cout << duration.count() << endl;
+	//cout << Statistics::instance->negamax_visited_nodes << endl;
 
 	return 1;
 }
-#endif
+
+#endif TESTING
